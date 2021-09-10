@@ -84,7 +84,7 @@ public:
   LinkManager*       linkMgr() { return m_pLinkMgr.get(); }
   const LinkManager* linkMgr() const { return m_pLinkMgr.get(); }
   /// Retrieve version number of this object representation
-  unsigned char version() const { return m_version; }
+  const unsigned char& version() const { return m_version; }
   /// Set version number of this object representation
   void setVersion( unsigned char vsn ) { m_version = vsn; }
   /// Return the refcount
