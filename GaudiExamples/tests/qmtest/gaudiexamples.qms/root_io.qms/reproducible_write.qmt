@@ -1,6 +1,6 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <!--
-    (c) Copyright 1998-2022 CERN for the benefit of the LHCb and ATLAS collaborations
+    (c) Copyright 1998-2023 CERN for the benefit of the LHCb and ATLAS collaborations
 
     This software is distributed under the terms of the Apache version 2 licence,
     copied verbatim in the file "LICENSE".
@@ -37,10 +37,25 @@ shutil.copy("../ROOTIO.xml", "ROOTIO.xml")
 
 validateWithReference()
 
-import filecmp
+from pathlib import Path
+from hashlib import sha256
+from pprint import pformat
+
+sums = {}
 for name in ["ROOTIO.dst", "ROOTIO.mdst"]:
-    if not filecmp.cmp(name, "ReproducibleWrite/" + name, shallow=False):
-        causes.append(f"File {name} was not reproduced")
+    path_a = Path(name)
+    path_b = Path("ReproducibleWrite") / name
+    a = sha256(open(path_a, "rb").read()).hexdigest() if path_a.exists() else "file missing"
+    b = sha256(open(path_b, "rb").read()).hexdigest() if path_b.exists() else "file missing"
+    if a != b or "missing" in (a, b):
+        causes.append(f"{name} content")
+    sums[name] = (a,b)
+
+result["sha256sums"] = result.Quote(pformat(sums))
 
 </text></argument>
+<argument name="environment"><set>
+<text>GAUDIAPPNAME=</text>
+<text>GAUDIAPPVERSION=</text>
+</set></argument>
 </extension>
