@@ -21,15 +21,6 @@
 #include <map>
 #include <string_view>
 
-#if FMT_VERSION < 80000
-namespace fmt {
-  template <typename T>
-  const T& runtime( const T& v ) {
-    return v;
-  }
-} // namespace fmt
-#endif
-
 namespace {
 
   /**
