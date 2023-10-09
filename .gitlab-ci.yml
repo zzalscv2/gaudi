@@ -315,20 +315,6 @@ check-copyright:
     - curl -o lb-check-copyright "https://gitlab.cern.ch/lhcb-core/LbDevTools/-/raw/master/LbDevTools/SourceTools.py?inline=false"
     - python lb-check-copyright --exclude lhcbproject.yml --exclude ci-utils/preset-default.cmake --exclude ci-utils/preset-full.cmake --exclude ci-utils/preset-minimal.cmake --exclude ci-utils/preset-no-test.cmake origin/${TARGET_BRANCH}
 
-website:
-  image: python
-  script:
-    - rm -rf public
-    - mkdir -p public
-    - cd docs
-    - pip install -r source/requirements.txt
-    - make html
-    - cp -a build/html/. ../public/.
-  artifacts:
-    paths:
-      - public
-    expire_in: 1 day
-
 doxygen:
   tags:
     - cvmfs
@@ -341,10 +327,8 @@ doxygen:
     - cmake --build build --target doc
     - rm -rf public
     - mkdir -p public/doxygen
-    - cp -r GaudiRelease/web_helpers/. public/doxygen/.
     - mv build/doxygen/html ${CI_COMMIT_REF_SLUG}
     - zip -r -q public/doxygen/${CI_COMMIT_REF_SLUG}.zip ${CI_COMMIT_REF_SLUG}
-
   artifacts:
     paths:
       - public
@@ -353,10 +337,8 @@ doxygen:
 
 # see https://gitlab.cern.ch/gitlabci-examples/deploy_eos for the details
 # of the configuration
-deploy-website:
+deploy-doxygen:
   needs:
-    - job: "website"
-      artifacts: true
     - job: "doxygen"
       artifacts: true
   rules:
