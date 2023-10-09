@@ -1,5 +1,5 @@
 /***********************************************************************************\
-* (c) Copyright 1998-2019 CERN for the benefit of the LHCb and ATLAS collaborations *
+* (c) Copyright 1998-2023 CERN for the benefit of the LHCb and ATLAS collaborations *
 *                                                                                   *
 * This software is distributed under the terms of the Apache version 2 licence,     *
 * copied verbatim in the file "LICENSE".                                            *
@@ -173,7 +173,7 @@ namespace GaudiRoot {
     Version_t version = b.ReadVersion( &start, &count, m_root );
     m_root->ReadBuffer( b, obj, version, start, count );
     ContainedObject* p = (ContainedObject*)obj;
-    p->setParent( (ObjectContainerBase*)Gaudi::getCurrentDataObject() );
+    p->setParent( dynamic_cast<ObjectContainerBase*>( Gaudi::getCurrentDataObject() ) );
   }
 
   template <>
