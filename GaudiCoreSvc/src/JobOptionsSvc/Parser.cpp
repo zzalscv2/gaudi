@@ -43,7 +43,11 @@ namespace {
   template <typename Grammar>
   bool ParseStream( std::ifstream& stream, const std::string& stream_name, gp::Messages* messages, gp::Node* root ) {
     // Load input stream
-    const std::string input = ( std::ostringstream{} << stream.rdbuf() ).str();
+    const std::string input = [&stream] {
+      std::ostringstream out{};
+      out << stream.rdbuf();
+      return out.str();
+    }();
 
     auto [last_line, last_column] = GetLastLineAndColumn( input );
 
